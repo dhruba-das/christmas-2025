@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snappy Xmas Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(120deg, #21335b 30%, #21b3d3 70%);
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      padding: 30px;
+    }
+    #card {
+      background: rgba(38, 46, 92, 0.89);
+      border: 4px solid #e04e6b;
+      border-radius: 16px;
+      box-shadow: 0 0 24px #3be07b;
+      display: inline-block;
+      padding: 36px 24px 24px 24px;
+      margin-top: 30px;
+    }
+    #pixel-canvas {
+      border: 4px solid #fff;
+      border-radius: 9px;
+      background: #12182e;
+      margin-bottom: 18px;
+      box-shadow: 0 0 20px #dd1e6e;
+    }
+    .message {
+      margin-top: 16px;
+      background: #ffecbc;
+      color: #5e2c00;
+      padding: 18px;
+      border-radius: 12px;
+      font-size: 18px;
+      min-height: 64px;
+    }
+    #login {
+      margin-top: 24px;
+    }
+    input {
+      font-family: 'Press Start 2P', cursive;
+      padding: 6px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 2px solid #dd1e6e;
+      background: #fff9ed;
+    }
+    button {
+      font-family: 'Press Start 2P', cursive;
+      margin-left: 10px;
+      padding: 6px 14px;
+      font-size: 16px;
+      background: #da1d60;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e76e83;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄 Merry Snappy Xmas and a Happy New Year -Dhruba! 🎅</h1>
+  <div id="login">
+    <label for="name">Enter your First name:</label>
+    <input type="text" id="name" />
+    <button onclick="showCard()">Open your card!</button>
+  </div>
+  <div id="card" style="display:none;">
+    <canvas id="pixel-canvas" width="400" height="400"></canvas>
+    <div class="message" id="custom-message"></div>
+  </div>
+  <script>
+    // JSON for custom messages
+    const messages = {
+      "Dana": "Wishing you a Merry Christmas and a Happy new year Dana! Glad we became good friends this year and may we hit higher weights at the Gym and bake more stuff! May you win all your 5050s in genshin and pull the 5*s of your dreams!",
+      "Mythili": "Wishing you a Merry Christmas and a Happy new year Mythili! Sorry for the number of times I have come up with unique spellings for your name- but I made sure I get it right this time XP I'm glad we became good friends this year! May you win all your 5050s in genshin and pull the 5*s of your dreams!",
+      "Anvita": "Wishing you a Merry Christmas and a Happy new year Willow! All the best for work and may you manage the new upcoming project well and have your driving privileges returned :3 May you win all your 5050s in gacha and pull the 5*s of your dreams! 🎮",
+      "Harsh": "Wishing you a Merry Christmas and a Happy new year 2026!! May you find the car of your dreams soon and your career reaches new highs 🎮",
+      "Tejaswini": "Dear Tejaswini! Wishing you a merry Christmas and a Happy new year 2026! Hoping you are able to take the teams and project you manage to new heights!!",
+      "Sebastian": "Hey Sebastian 🎮!! Wishing you a Merry Christmas and a Happy new year 2026!! I'm super glad to have met you this year and looking forward to more conversations- like we used to have while at Atlas!! Looking forward to meeting you at Grad!!",
+      "Anushna": "Charlie, may your holidays be pixel-perfect! 🎮",
+      "Freida": "Charlie, may your holidays be pixel-perfect! 🎮"
+      // Add more friends here
+    };
+    const defaultMessage = "Wishing you a merry Christmas and a Happy new year! Wishing you joy, laughter, and festive treats. 🦴🍬";
+
+    function showCard() {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('card').style.display = 'block';
+      let name = document.getElementById('name').value.trim();
+      let msg = messages[name] || defaultMessage;
+      document.getElementById('custom-message').innerText = msg;
+    }
+
+    // Image and pixel effect
+    const canvas = document.getElementById('pixel-canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.src = 'doggo.png'; // Use your local asset or serve via backend
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+
+    // Simple pixel jiggle effect
+    let originalData;
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    };
+
+    canvas.addEventListener('mousemove', function(e) {
+      if (!originalData) return;
+      ctx.putImageData(originalData, 0, 0);
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      // Shake pixels near cursor
+      for (let dx = -12; dx < 12; dx++) {
+        for (let dy = -12; dy < 12; dy++) {
+          let px = Math.floor(x + dx);
+          let py = Math.floor(y + dy);
+          if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height) {
+            let offset = (py * canvas.width + px) * 4;
+            // Slight noise
+            originalData.data[offset] = Math.min(255, originalData.data[offset] + Math.random() * 24);
+            originalData.data[offset+1] = Math.min(255, originalData.data[offset+1] + Math.random() * 24);
+            originalData.data[offset+2] = Math.min(255, originalData.data[offset+2] + Math.random() * 24);
+          }
+        }
+      }
+      ctx.putImageData(originalData, 0, 0);
+    });
+
+    canvas.addEventListener('mouseleave', function() {
+      if (originalData) ctx.putImageData(originalData, 0, 0);
+    });
+  </script>
+</body>
+</html>

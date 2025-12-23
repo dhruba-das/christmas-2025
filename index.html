@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snappy Xmas Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(120deg, #21335b 30%, #21b3d3 70%);
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+    #card {
+      background: rgba(38, 46, 92, 0.89);
+      border: 3px solid #e04e6b;
+      border-radius: 14px;
+      box-shadow: 0 0 18px #3be07b;
+      display: inline-block;
+      padding: 28px 14px 14px 14px;
+      margin-top: 20px;
+      max-width: 98vw;
+    }
+    #pixel-canvas {
+      border: 3px solid #fff;
+      border-radius: 8px;
+      background: #12182e;
+      margin-bottom: 10px;
+      box-shadow: 0 0 12px #dd1e6e;
+      width: 90vw;
+      max-width: 400px;
+      height: 90vw;
+      max-height: 400px;
+      display: block;
+      margin: 0 auto 14px auto;
+      touch-action: none;
+    }
+    .message {
+      margin-top: 10px;
+      background: #ffecbc;
+      color: #5e2c00;
+      padding: 13px;
+      border-radius: 9px;
+      font-size: 16px;
+      min-height: 56px;
+      word-break: break-word;
+      line-height: 1.8;
+    }
+    #login {
+      margin-top: 16px;
+    }
+    input {
+      font-family: 'Press Start 2P', cursive;
+      padding: 7px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 2px solid #dd1e6e;
+      background: #fff9ed;
+      width: 68vw;
+      max-width: 260px;
+      box-sizing: border-box;
+    }
+    button {
+      font-family: 'Press Start 2P', cursive;
+      margin-left: 8px;
+      padding: 7px 12px;
+      font-size: 14px;
+      background: #da1d60;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 2px;
+    }
+    button:active, button:focus {
+      background: #e76e83;
+      outline: none;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 20px;
+        margin: 8px 0 3px 0;
+      }
+      #card {
+        padding: 13px 4px 8px 4px;
+        border-radius: 8px;
+        margin-top: 9px;
+      }
+      #pixel-canvas {
+        width: 98vw;
+        height: 98vw;
+        max-width: 320px;
+        max-height: 320px;
+      }
+      input, button {
+        font-size: 12px;
+        padding: 6px;
+        max-width: 80vw;
+      }
+      .message {
+        font-size: 13px;
+        padding: 8px;
+        border-radius: 6px;
+        min-height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄Merry Snappy Xmas and a Happy New Year -Dhruba! 🎅</h1>
+  <div id="login">
+    <label for="name">Enter name:</label>
+    <input type="text" id="name" autocomplete="name"/>
+    <button onclick="showCard()">Open your card!</button>
+  </div>
+  <div id="card" style="display:none;">
+    <canvas id="pixel-canvas" width="400" height="400"></canvas>
+    <div class="message" id="custom-message"></div>
+  </div>
+  <script>
+    // Friends and messages
+    const messages = {
+      "Dana": 'Wishing you a Merry Christmas and a Happy new year Dana! Glad we became good friends this year and may we hit higher weights at the Gym and bake more stuff! May you win all your 5050s in genshin and pull the 5*s of your dreams! <br> <img src="Gym.gif" alt="Kek" style="height:256px;vertical-align:middle;"> <br>art credit:  https://dribbble.com/shots/5851349-Physique-in-need-of-a-tweek',
+      "Mythili Piplup Myna": 'Wishing you a Merry Christmas and a Happy new year Mythili! Sorry for the number of times I have come up with unique spellings for your name- but I made sure I get it right this time XP Im glad we became good friends this year! May you win all your 5050s in genshin and pull the 5*s of your dreams! <br> <img src="keqing.jpeg" alt="Kek" style="height:256px;vertical-align:middle;"> <br>art credit: @ekasetyanugraha on instagram',
+      "Anvita Anvi Bana Willow": 'Wishing you a Merry Christmas and a Happy new year Willow! All the best for work and may you manage the new upcoming project well and have your driving privileges returned :3 May you win all your 5050s in gacha and pull the 5*s of your dreams! 🎮 <br> <img src="childe.jpeg" alt="Kek" style="height:256px;vertical-align:middle;"> <br>art credit: @ekasetyanugraha on instagram',
+      "Harsh Vyas honeyiivy": "Wishing you a Merry Christmas and a Happy new year 2026 Harsh!! May you find the car of your dreams soon and your career reaches new highs 🎮",
+      "Tejaswini Bhurke": "Dear Tejaswini! Wishing you a merry Christmas and a Happy new year 2026! Hoping you are able to take the teams and project you manage to new heights!!",
+      "Sebastian Seb": 'Hey Sebastian 🎮!! Wishing you a Merry Christmas and a Happy new year 2026!! Im super glad to have met you this year and looking forward to more conversations- like we used to have while at Atlas!! Looking forward to meeting you at Grad!! <br> <img src="sloth.jpg" alt="Kek" style="height:256px;vertical-align:middle;"> <br>art credit: @shutterstock',
+      "Anushna Thacker": "Anushnaaaaa!! Missing you so much- have fun while in India but come back soon :3 Wishing you a Merry Christmas and a Happy new year 2026!! Super looking forward to meeting and also celebrating grad and taking a bazzillion picutres!! So glad we were flatmates at Atlas and became such close friends for life!! ",
+      "Jhimi Jim Sherpa": "Hey Jhimi! Wishing you a Merry Christmas and a Happy new year 2026!! Thank you for being an amazing landlord and it has been lovely staying at 104, Elm Park 🎮",
+      "Archisa Biswas Beral Baccha": 'Hey Archisa! Wishing you a Merry Christmas and a Happy new year 2026!! So glad we became friends in KCL and all the memories we made lol!',
+      "Abhishree Kashyap": 'Hey Abhishree! Wishing you a Merry Christmas and a Happy new year 2026!! So glad we became friends in KCL and all the memories we made lol! May we both get great jobs in Ldn and win our 5050s in all the gachas we play <br> <img src="Whotao.jpeg" alt="Kek" style="height:256px;vertical-align:middle;"> <br>art credit: @ekasetyanugraha on instagram',
+      "Freida Rabbit King Rabbitking Usaginoou": "Dear Rabbit King! Wishing you, Jun, Leon and your fam a Merry Christmas and a Happy new year 2026!! May this near year bring you happiness, more binkies and treats!! I'm so glad we know each other- and hopefully someday meet irl!  🎮",
+      "Zahra Khalid": "Hey Zahra 🎮!! Wishing you a Merry Christmas and a Happy new year 2026!! I'm super glad to have met you this year and becoming good friends, going on walks, watching cats and doggos, and food outings!! Looking forward to meeting you at Grad!!"
+      
+    
+    };
+
+    function showCard() {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('card').style.display = 'block';
+    let input = document.getElementById('name').value.trim();
+    let inputParts = input.split(/\s+/).map(part => part.toLowerCase());
+
+    // Find a match by first or last name (case-insensitive)
+    let foundKey = null;
+    Object.keys(messages).forEach(key => {
+      let keyParts = key.trim().split(/\s+/).map(part => part.toLowerCase());
+      keyParts.forEach(part => {
+        if (inputParts.includes(part)) foundKey = key;
+      });
+    });
+
+    let msg;
+    if (foundKey) {
+      msg = messages[foundKey];
+    } else {
+      // Default, with entered input capitalized for display
+      let nameDisplay = input ? input.replace(/\b\w/g, l => l.toUpperCase()) : "Friend";
+      msg = `Merry Christmas ${nameDisplay}! Wishing you joy, laughter, and festive treats. 🦴🍬`;
+    }
+    document.getElementById('custom-message').innerHTML = msg;
+  }
+
+    // Pixel image handling
+    const canvas = document.getElementById('pixel-canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.src = 'doggo.png'; // Use your image file path
+    let originalData, tempData;
+
+    img.onload = function() {
+      updateCanvasSize();
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    };
+
+    // Responsive canvas size handler
+    function updateCanvasSize() {
+      const size = Math.min(window.innerWidth * 0.9, 400);
+      canvas.width = size;
+      canvas.height = size;
+      if (img.complete) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      }
+    }
+    window.addEventListener('resize', updateCanvasSize);
+
+    // Jiggle effect for touch & mouse
+    function jiggle(e) {
+      if (!originalData) return;
+      ctx.putImageData(originalData, 0, 0);
+
+      let x, y;
+      if (e.touches && e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+      } else {
+        const rect = canvas.getBoundingClientRect();
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+      }
+
+      tempData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      for (let dx = -10; dx < 10; dx++) {
+        for (let dy = -10; dy < 10; dy++) {
+          const px = Math.floor(x + dx);
+          const py = Math.floor(y + dy);
+          if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height) {
+            const offset = (py * canvas.width + px) * 4;
+            tempData.data[offset] = Math.min(255, tempData.data[offset] + Math.random() * 22);
+            tempData.data[offset+1] = Math.min(255, tempData.data[offset+1] + Math.random() * 22);
+            tempData.data[offset+2] = Math.min(255, tempData.data[offset+2] + Math.random() * 22);
+          }
+        }
+      }
+      ctx.putImageData(tempData, 0, 0);
+    }
+
+    function restoreImage() {
+      if (originalData) ctx.putImageData(originalData, 0, 0);
+    }
+
+    canvas.addEventListener('mousemove', jiggle);
+    canvas.addEventListener('touchmove', jiggle, {passive: false});
+    canvas.addEventListener('mouseleave', restoreImage);
+    canvas.addEventListener('touchend', restoreImage);
+    
+  </script>
+</body>
+</html>
